@@ -1,0 +1,7 @@
+{
+  "name": "DinoGame",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
