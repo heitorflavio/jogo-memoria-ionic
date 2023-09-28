@@ -1,6 +1,6 @@
 {
   "appId": "com.example.app",
-  "appName": "DinoGame",
+  "appName": "Naruto Memory",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"
