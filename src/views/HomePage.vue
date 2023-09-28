@@ -7,7 +7,7 @@
     <div class="grid">
       <div v-for="(card, index) in cards" :key="index" :class="{ 'flipped': card.flipped }" @click="flipCard(index)">
         <div class="card">
-          <div  class="card-front">
+          <div class="card-front">
             <img :src="card.value" alt="">
           </div>
           <div class="card-back"></div>
@@ -28,21 +28,29 @@ import akatsuki from '@/assets/img/akatsuki.png'
 import sasuke from '@/assets/img/sasuke.png'
 import sharingan from '@/assets/img/sharingan.png'
 import kakashi from '@/assets/img/kakashi.png'
+/**
+ * Este código é responsável por implementar um jogo de memória com cartas de personagens do anime "Naruto".
+ * O jogador precisa encontrar pares de cartas idênticas para ganhar pontos. O objetivo é encontrar todos os pares
+ * em um período de tempo.
+ */
 export default {
   data() {
     return {
-      cards: [],
-      flippedCards: [],
-      points: 0,
-      time: 0,
+      cards: [],         // Armazena as cartas do jogo (pares de imagens).
+      flippedCards: [],  // Armazena as cartas viradas pelo jogador.
+      points: 0,         // Armazena a pontuação do jogador.
+      time: 0,           // Armazena o tempo decorrido do jogo.
     };
   },
   created() {
+    // Inicializa o jogo quando o componente é criado.
     this.initializeGame();
   },
   methods: {
+    /**
+     * Inicializa o jogo, embaralhando as cartas e configurando o tempo.
+     */
     initializeGame() {
-      // conjunto de cartas 
       const values = [
         naruto,
         sakura,
@@ -52,12 +60,20 @@ export default {
         akatsuki,
         sasuke,
         sharingan,
-        kakashi    
+        kakashi
       ];
+      // Duplica os valores para criar pares de cartas.
       const cards = values.concat(values);
+      // Embaralha o array de cartas.
       this.cards = this.shuffleArray(cards).map((value) => ({ value, flipped: false }));
+      // Inicia o cronômetro.
       this.startTimer();
     },
+    /**
+     * Embaralha um array usando o algoritmo de Fisher-Yates.
+     * @param {Array} array - O array a ser embaralhado.
+     * @returns {Array} - O array embaralhado.
+     */
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -65,51 +81,71 @@ export default {
       }
       return array;
     },
+    /**
+     * Vira uma carta quando o jogador a seleciona.
+     * @param {number} index - O índice da carta no array.
+     */
+    /**
+ * Vira uma carta quando o jogador a seleciona e verifica se há uma correspondência.
+ *
+ * @param {number} index - O índice da carta no array 'cards'.
+ */
     flipCard(index) {
+      // Verifica se a carta não está virada e se o jogador não virou mais de duas cartas.
       if (!this.cards[index].flipped && this.flippedCards.length < 2) {
-        this.cards[index].flipped = true;
-        this.flippedCards.push(index);
+        this.cards[index].flipped = true; // Vira a carta selecionada.
+        this.flippedCards.push(index); // Adiciona o índice da carta ao array de cartas viradas.
 
+        // Se duas cartas estiverem viradas, verifica se são iguais.
         if (this.flippedCards.length === 2) {
-          const [card1, card2] = this.flippedCards;
+          const [card1, card2] = this.flippedCards; // Obtém os índices das duas cartas viradas.
+
           if (this.cards[card1].value === this.cards[card2].value) {
-            // As cartas coincidem, mantenha-as viradas
-            this.points = this.points + 1;
-            this.flippedCards = [];
+            // As cartas coincidem, o jogador ganha pontos e as cartas permanecem viradas.
+            this.points = this.points + 1; // Aumenta a pontuação do jogador.
+            this.flippedCards = []; // Limpa o array de cartas viradas.
           } else {
-            // As cartas não coincidem, aguarde um momento e, em seguida, vire-as de volta
-            this.points = this.points - 1;
+            // As cartas não coincidem, aguarde um momento e, em seguida, vire-as de volta.
+            this.points = this.points - 1; // Reduz a pontuação do jogador.
             setTimeout(() => {
-              this.cards[card1].flipped = false;
-              this.cards[card2].flipped = false;
-              this.flippedCards = [];
-            }, 1000);
+              this.cards[card1].flipped = false; // Vira a primeira carta de volta.
+              this.cards[card2].flipped = false; // Vira a segunda carta de volta.
+              this.flippedCards = []; // Limpa o array de cartas viradas.
+            }, 1000); // Aguarda 1 segundo antes de virar as cartas de volta.
           }
         }
       }
 
-      // Verifique se todos os cards estão virados
+      // Verifica se todas as cartas foram viradas (todos os pares de cartas foram encontrados).
       const allFlipped = this.cards.every((card) => card.flipped);
       if (allFlipped) {
         setTimeout(() => {
-          this.resetGame();
-        }, 1000);
+          this.resetGame(); // Reseta o jogo após encontrar todos os pares de cartas.
+        }, 1000); // Aguarda 1 segundo antes de reiniciar o jogo.
       }
     },
+    /**
+     * Reseta o jogo, redefinindo as cartas, a pontuação e o tempo.
+     */
     resetGame() {
       this.points = 0;
       this.time = 0;
-      this.cards.forEach((card) => (card.flipped = false));
+      this.cards.forEach((card) => (card.flipped = false)); // Vira todas as cartas de volta.
       this.flippedCards = [];
-      this.initializeGame();
+      this.initializeGame(); // Inicializa um novo jogo.
     },
+    /**
+     * Inicia o cronômetro do jogo.
+     */
     startTimer() {
+      // Atualiza o tempo a cada 1200 milissegundos (1,2 segundos).
       setInterval(() => {
         this.time = this.time += 1;
       }, 1200);
     },
   },
 };
+
 </script>
 
 
