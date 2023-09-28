@@ -1,20 +1,33 @@
 <template>
+  <div class="info">
+    <span> Pontos: {{ points }}</span>
+    <span>Tempo: {{ time }}</span>
+  </div>
   <div class="memory-game">
     <div class="grid">
       <div v-for="(card, index) in cards" :key="index" :class="{ 'flipped': card.flipped }" @click="flipCard(index)">
         <div class="card">
-          <div class="card-front">{{ card.value }}</div>
+          <div  class="card-front">
+            <img :src="card.value" alt="">
+          </div>
           <div class="card-back"></div>
         </div>
       </div>
     </div>
-    <p> Pontos: {{ points }}</p>
-    <p>Tempo: {{ time }}</p>
     <button @click="resetGame">Reiniciar Jogo</button>
   </div>
 </template>
 
 <script>
+import naruto from "@/assets/img/naruto.png"
+import sakura from '@/assets/img/sakura.png'
+import hinata from '@/assets/img/hinata.png'
+import tsunade from '@/assets/img/tsunade.png'
+import gara from '@/assets/img/gara.png'
+import akatsuki from '@/assets/img/akatsuki.png'
+import sasuke from '@/assets/img/sasuke.png'
+import sharingan from '@/assets/img/sharingan.png'
+import kakashi from '@/assets/img/kakashi.png'
 export default {
   data() {
     return {
@@ -29,8 +42,18 @@ export default {
   },
   methods: {
     initializeGame() {
-      // Crie um conjunto de cartas duplicadas e embaralhe-as
-      const values = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+      // conjunto de cartas 
+      const values = [
+        naruto,
+        sakura,
+        hinata,
+        tsunade,
+        gara,
+        akatsuki,
+        sasuke,
+        sharingan,
+        kakashi    
+      ];
       const cards = values.concat(values);
       this.cards = this.shuffleArray(cards).map((value) => ({ value, flipped: false }));
       this.startTimer();
@@ -83,7 +106,7 @@ export default {
     startTimer() {
       setInterval(() => {
         this.time = this.time += 1;
-      }, 1000);
+      }, 1200);
     },
   },
 };
@@ -91,17 +114,23 @@ export default {
 
 
 <style scoped>
+.info {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
+}
+
 .memory-game {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 100px);
-  gap: 10px;
+  grid-template-columns: repeat(3, 100px);
+  gap: 5px;
 }
 
 .grid>div {
@@ -141,6 +170,7 @@ export default {
   position: absolute;
   backface-visibility: hidden;
 }
+
 
 .card-back {
   transform: rotateY(180deg);
